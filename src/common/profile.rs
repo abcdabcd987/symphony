@@ -170,20 +170,20 @@ impl FromStr for ModelProfile {
 
 impl fmt::Display for ModelProfile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}:{}:{}\n", self.framework, self.model, self.version)?;
-        write!(f, "{}\n", self.gpu_model)?;
-        write!(f, "{}\n", self.gpu_uuid)?;
-        write!(f, "{}\n", LINE_FORWARD)?;
-        write!(f, "{}\n", LINE_TABLE_HEADER)?;
+        writeln!(f, "{}:{}:{}", self.framework, self.model, self.version)?;
+        writeln!(f, "{}", self.gpu_model)?;
+        writeln!(f, "{}", self.gpu_uuid)?;
+        writeln!(f, "{}", LINE_FORWARD)?;
+        writeln!(f, "{}", LINE_TABLE_HEADER)?;
         for entry in self.forwards[1..].iter() {
-            write!(f, "{}\n", entry)?;
+            writeln!(f, "{}", entry)?;
         }
-        write!(f, "{}\n", LINE_PREPROCESS)?;
+        writeln!(f, "{}", LINE_PREPROCESS)?;
         let pre = self.preproc * 1e6;
-        write!(f, "{},{},{}\n", pre.avg, pre.std, self.preproc_repeat)?;
-        write!(f, "{}\n", LINE_POSTPROCESS)?;
+        writeln!(f, "{},{},{}", pre.avg, pre.std, self.preproc_repeat)?;
+        writeln!(f, "{}", LINE_POSTPROCESS)?;
         let post = self.postproc * 1e6;
-        write!(f, "{},{},{}\n", post.avg, post.std, self.postproc_repeat)?;
+        writeln!(f, "{},{},{}", post.avg, post.std, self.postproc_repeat)?;
         Ok(())
     }
 }
