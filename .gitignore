@@ -1,3 +1,9 @@
 target/
+build-dep-src/
+build-dep-install/
 tarpaulin-report.html
 Cargo.lock
+
+.python-version
+.mypy_cache/
+.vscode/
