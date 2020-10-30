@@ -249,6 +249,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn parse_and_serialize_profile() {
         let txt = r#"
             tensorflow:resnet_0:1
