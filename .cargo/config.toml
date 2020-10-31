@@ -1,0 +1,6 @@
+# Currently cargo doesn't support adding linker options.
+# This is just a workaround.
+# See: https://github.com/rust-lang/cargo/issues/5077
+
+[build]
+rustflags = ["-C", "link-arg=-Wl,-rpath,libtensorflow_cc/lib"]

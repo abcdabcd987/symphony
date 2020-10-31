@@ -2,7 +2,9 @@ target/
 build-dep-src/
 build-dep-install/
 tarpaulin-report.html
+cobertura.xml
 Cargo.lock
+libtensorflow_cc-*
 
 .python-version
 .mypy_cache/

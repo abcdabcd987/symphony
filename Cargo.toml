@@ -8,3 +8,7 @@ edition = "2018"
 
 [dependencies]
 thiserror = "1.0"
+cxx = "0.5"
+
+[build-dependencies]
+cxx-build = "0.5"
