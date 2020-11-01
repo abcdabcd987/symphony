@@ -56,7 +56,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: libtensorflow_cc-v2.3.1-gpu
-          key: libtensorflow_cc-v2.3.1-gpu
+          key: libtensorflow_cc-v2.3.1-gpu-retry
+          restore-keys: |
+            libtensorflow_cc-v2.3.1-gpu
 
       - name: Downlaod libtensorflow_cc
         if: steps.cache-libtensorflow_cc.outputs.cache-hit != 'true'
