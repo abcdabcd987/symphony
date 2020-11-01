@@ -56,7 +56,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: libtensorflow_cc-v2.3.1-gpu
-          key: libtensorflow_cc-v2.3.1-gpu-retry
+          key: libtensorflow_cc-v2.3.1-gpu-retry2
+          upload-chunk-size: 4000000
           restore-keys: |
             libtensorflow_cc-v2.3.1-gpu
 
