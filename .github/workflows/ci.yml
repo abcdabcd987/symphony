@@ -43,3 +43,46 @@ jobs:
         with:
           command: clippy
           args: --all-targets --all-features -- -D warnings
+
+  coverage:
+    name: Test and Coverage on GPU
+    runs-on: [self-hosted, gpu]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Cache libtensorflow_cc
+        id: cache-libtensorflow_cc
+        uses: actions/cache@v2
+        with:
+          path: libtensorflow_cc-v2.3.1-gpu
+          key: libtensorflow_cc-v2.3.1-gpu
+
+      - name: Downlaod libtensorflow_cc
+        if: steps.cache-libtensorflow_cc.outputs.cache-hit != 'true'
+        run: ./download-libtensorflow_cc.sh
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Run cargo-tarpaulin
+        run: |
+          env LD_LIBRARY_PATH="$LD_LIBRARY_PATH:libtensorflow_cc/lib" \
+              cargo tarpaulin --verbose --all-features --workspace  --out Xml
+
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage-report
+          path: cobertura.xml
