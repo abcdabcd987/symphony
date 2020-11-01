@@ -1,0 +1,5 @@
+[default]
+exclude-files = ["libtensorflow_cc*"]
+
+[report]
+out = ["Html", "Xml"]

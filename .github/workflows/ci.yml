@@ -1,36 +1,8 @@
-on: [push, pull_request]
+on: [push]
 
 name: CI
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-
-  test:
-    name: Test Suite
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
@@ -52,6 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache libtensorflow_cc
+        id: cache-libtensorflow_cc
+        uses: actions/cache@v2
+        with:
+          path: libtensorflow_cc-v2.3.1-gpu
+          key: libtensorflow_cc-v2.3.1-gpu
+      - name: Downlaod libtensorflow_cc
+        if: steps.cache-libtensorflow_cc.outputs.cache-hit != 'true'
+        run: ./download-libtensorflow_cc.sh
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
