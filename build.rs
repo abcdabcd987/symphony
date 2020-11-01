@@ -10,6 +10,7 @@ fn main() {
         .flag("-std=c++17")
         .extra_warnings(false)
         .include("libtensorflow_cc/include")
+        .include("/usr/local/cuda-10.1/include")
         .object("libtensorflow_cc/lib/libtensorflow_cc.so")
         .object("libtensorflow_cc/lib/libtensorflow_framework.so")
         .compile("tfwrapper")
