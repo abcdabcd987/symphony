@@ -24,15 +24,8 @@ jobs:
     runs-on: [self-hosted, gpu]
     steps:
       - uses: actions/checkout@v2
-      - name: Cache libtensorflow_cc
-        id: cache-libtensorflow_cc
-        uses: actions/cache@v2
-        with:
-          path: libtensorflow_cc-v2.3.1-gpu
-          key: libtensorflow_cc-v2.3.1-gpu
-      - name: Downlaod libtensorflow_cc
-        if: steps.cache-libtensorflow_cc.outputs.cache-hit != 'true'
-        run: ./download-libtensorflow_cc.sh
+      - name: libtensorflow_cc
+        run: ln -s /host/libtensorflow_cc-v2.3.1-gpu libtensorflow_cc-v2.3.1-gpu
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -51,19 +44,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Cache libtensorflow_cc
-        id: cache-libtensorflow_cc
-        uses: actions/cache@v2
-        with:
-          path: libtensorflow_cc-v2.3.1-gpu
-          key: libtensorflow_cc-v2.3.1-gpu-retry2
-          upload-chunk-size: 4000000
-          restore-keys: |
-            libtensorflow_cc-v2.3.1-gpu
-
-      - name: Downlaod libtensorflow_cc
-        if: steps.cache-libtensorflow_cc.outputs.cache-hit != 'true'
-        run: ./download-libtensorflow_cc.sh
+      - name: libtensorflow_cc
+        run: ln -s /host/libtensorflow_cc-v2.3.1-gpu libtensorflow_cc-v2.3.1-gpu
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
