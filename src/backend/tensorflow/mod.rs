@@ -1,5 +1,7 @@
 mod tfwrapper;
 
+pub use tfwrapper::*;
+
 #[cfg(test)]
 mod tests {
     use super::*;

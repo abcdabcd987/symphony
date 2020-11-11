@@ -17,7 +17,7 @@ class Tensor {
   std::unique_ptr<std::vector<float>> Read() const;
 
  private:
-  // This is a ref-counted pointer type.
+  // tensorflow::Tensor is a ref-counted pointer type.
   tensorflow::Tensor tensor_;
 };
 

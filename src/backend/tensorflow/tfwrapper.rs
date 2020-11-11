@@ -1,22 +1,16 @@
 #![allow(dead_code)] // TODO: remove me
 #![allow(clippy::ptr_arg)] // cxx doesn't support &[T] yet.
 
-pub use crate::backend::tensorflow::tfwrapper::ffi::SessionConfig;
+use crate::backend::error::BackendError;
 use cxx::UniquePtr;
-use thiserror::Error;
-
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("TensorFlowError: {0}")]
-    TensorFlow(#[from] cxx::Exception),
-}
+pub use ffi::SessionConfig;
 
 pub struct Session {
     p: UniquePtr<ffi::Session>,
 }
 
 impl Session {
-    pub fn new(config: SessionConfig) -> Result<Session, Error> {
+    pub fn new(config: SessionConfig) -> Result<Session, BackendError> {
         ffi::CreateSession(config)
             .map(|p| Session { p })
             .map_err(|e| e.into())
@@ -32,7 +26,7 @@ impl Session {
         }
     }
 
-    pub fn forward(&mut self, batch_size: usize) -> Result<Tensor, Error> {
+    pub fn forward(&mut self, batch_size: usize) -> Result<Tensor, BackendError> {
         self.p
             .Forward(batch_size)
             .map(|p| Tensor { p })
@@ -51,11 +45,11 @@ impl Tensor {
         }
     }
 
-    pub fn copy_from(&mut self, src: &Vec<f32>) -> Result<(), Error> {
+    pub fn copy_from(&mut self, src: &Vec<f32>) -> Result<(), BackendError> {
         self.p.CopyFrom(src).map_err(|e| e.into())
     }
 
-    pub fn read(&self) -> Result<Vec<f32>, Error> {
+    pub fn read(&self) -> Result<Vec<f32>, BackendError> {
         // TODO: Avoid copying from C++ to Rust.
         self.p
             .Read()

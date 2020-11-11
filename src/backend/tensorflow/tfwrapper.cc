@@ -87,7 +87,7 @@ Session::Session(tensorflow::SessionOptions options,
       max_batch_(max_batch),
       input_name_(std::move(input_name)),
       output_name_(std::move(output_name)) {
-  LOG(INFO) << "Constructor";
+  LOG(INFO) << "Constructing tfwrapper::Session";
 
   auto* process_state = tensorflow::GPUProcessState::singleton();
   allocator_ = process_state->GetGPUAllocator(options.config.gpu_options(),
@@ -95,8 +95,8 @@ Session::Session(tensorflow::SessionOptions options,
 }
 
 Session::~Session() {
-  LOG(INFO) << "Destructor";
   session_->Close();
+  LOG(INFO) << "Destructed tfwrapper::Session";
 }
 
 tensorflow::Tensor Session::AllocateInputTensor(
