@@ -34,6 +34,7 @@ impl Session {
 
     pub fn forward(&mut self, batch_size: usize) -> Result<Tensor, Error> {
         self.p
+            .pin_mut()
             .Forward(batch_size)
             .map(|p| Tensor { p })
             .map_err(|e| e.into())
@@ -52,7 +53,7 @@ impl Tensor {
     }
 
     pub fn copy_from(&mut self, src: &Vec<f32>) -> Result<(), Error> {
-        self.p.CopyFrom(src).map_err(|e| e.into())
+        self.p.pin_mut().CopyFrom(src).map_err(|e| e.into())
     }
 
     pub fn read(&self) -> Result<Vec<f32>, Error> {
@@ -74,18 +75,18 @@ mod ffi {
         output_name: String,
     }
 
-    extern "C" {
+    unsafe extern "C++" {
         include!("symphony/src/backend/tensorflow/tfwrapper.h");
 
         type Tensor;
         pub fn At(self: &Tensor, index: usize) -> UniquePtr<Tensor>;
-        pub fn CopyFrom(self: &mut Tensor, src: &Vec<f32>) -> Result<()>;
+        pub fn CopyFrom(self: Pin<&mut Tensor>, src: &Vec<f32>) -> Result<()>;
         pub fn Read(self: &Tensor) -> Result<UniquePtr<CxxVector<f32>>>;
 
         type Session;
         pub fn CreateSession(config: SessionConfig) -> Result<UniquePtr<Session>>;
         pub fn Hello(self: &Session) -> usize;
         pub fn InputTensor(self: &Session) -> UniquePtr<Tensor>;
-        pub fn Forward(self: &mut Session, batch_size: usize) -> Result<UniquePtr<Tensor>>;
+        pub fn Forward(self: Pin<&mut Session>, batch_size: usize) -> Result<UniquePtr<Tensor>>;
     }
 }
